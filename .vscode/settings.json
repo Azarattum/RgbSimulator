@@ -1,0 +1,10 @@
+{
+  "files.associations": {
+    "layout.h": "c",
+    "__locale": "c",
+    "complex": "cpp",
+    "qmk.h": "c",
+    "ios": "c",
+    "variant": "c"
+  }
+}

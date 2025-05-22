@@ -1,0 +1,12 @@
+{
+  "configurations": [
+    {
+      "name": "Mac",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "/opt/homebrew/Cellar/sdl2/2.32.6/include"
+      ]
+    }
+  ],
+  "version": 4
+}
