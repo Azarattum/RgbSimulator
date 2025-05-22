@@ -23,7 +23,7 @@
 #define RGB_MATRIX_KEYREACTIVE_ENABLED
 #define RGB_MATRIX_FRAMEBUFFER_EFFECTS
 #define RGB_MATRIX_LED_COUNT LED_COUNT
-#define RGB_MATRIX_LED_PROCESS_LIMIT (RGB_MATRIX_LED_COUNT + 4) / 5
+#define RGB_MATRIX_LED_PROCESS_LIMIT RGB_MATRIX_LED_COUNT
 #define LED_HITS_TO_REMEMBER 8
 
 #define RGB_MATRIX_CUSTOM_EFFECT_IMPLS
@@ -260,6 +260,11 @@ uint16_t timer_read(void) { return (uint16_t)timer_read32(); }
 
 uint16_t timer_elapsed(uint16_t last) {
   return TIMER_DIFF_16(timer_read(), last);
+}
+
+void advance_time(uint32_t ms) {
+  current_time += ms;
+  access_counter = 0;
 }
 
 // ————————————————————————

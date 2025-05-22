@@ -113,6 +113,18 @@ int main() {
 
               g_last_hit_tracker.count++;
             }
+
+#ifdef ENABLE_RGB_MATRIX_TYPING_HEATMAP
+            for (int row = 0; row < MATRIX_ROWS; row++) {
+              for (int col = 0; col < MATRIX_COLS; col++) {
+                if (g_led_config.matrix_co[row][col] == i) {
+                  process_rgb_matrix_typing_heatmap(row, col);
+                  break;
+                }
+              }
+            }
+#endif
+
             break;
           }
         }
@@ -123,7 +135,6 @@ int main() {
 
     ANIMATION(&params);
     params.init = false;
-    params.iter += 1;
     process_hits();
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -148,6 +159,7 @@ int main() {
 
     SDL_RenderPresent(renderer);
     SDL_Delay(16);
+    advance_time(16);
   }
 
   SDL_DestroyRenderer(renderer);
