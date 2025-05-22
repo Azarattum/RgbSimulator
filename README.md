@@ -1,5 +1,7 @@
 # QMK RGB Simulator  
-Test QMK RGB matrix animations in real-time without reflashing your keyboard!
+Preview QMK RGB matrix animations in real-time without reflashing your keyboard!
+
+![Screenshot 2025-05-22 at 20 31 57](https://github.com/user-attachments/assets/0259cd4d-4c9e-4cae-ae5d-19e54e1cf57c)
 
 ## ✨ Features  
 - **Live Preview**: Visualize QMK RGB animations instantly.  
