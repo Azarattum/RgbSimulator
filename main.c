@@ -18,6 +18,27 @@
 #define WINDOW_WIDTH 715
 #define WINDOW_HEIGHT 260
 
+void process_hits() {
+  uint16_t max_tick =
+      (rgb_matrix_config.speed == 0) ? 0 : 65535 / rgb_matrix_config.speed;
+
+  for (int i = 0; i < g_last_hit_tracker.count;) {
+    g_last_hit_tracker.tick[i] += rgb_matrix_config.speed;
+
+    if (g_last_hit_tracker.tick[i] > max_tick) {
+      for (int j = i; j < g_last_hit_tracker.count - 1; j++) {
+        g_last_hit_tracker.x[j] = g_last_hit_tracker.x[j + 1];
+        g_last_hit_tracker.y[j] = g_last_hit_tracker.y[j + 1];
+        g_last_hit_tracker.index[j] = g_last_hit_tracker.index[j + 1];
+        g_last_hit_tracker.tick[j] = g_last_hit_tracker.tick[j + 1];
+      }
+      g_last_hit_tracker.count--;
+    } else {
+      i++;
+    }
+  }
+}
+
 int main() {
   SDL_Init(SDL_INIT_VIDEO);
   SDL_Window* window =
@@ -72,6 +93,30 @@ int main() {
             break;
         }
       }
+      if (event.type == SDL_MOUSEBUTTONDOWN) {
+        int mouseX, mouseY;
+        SDL_GetMouseState(&mouseX, &mouseY);
+
+        for (int i = 0; i < LED_COUNT; i++) {
+          int led_x = g_led_config.point[i].x * 3 + 4;
+          int led_y = g_led_config.point[i].y * 3 + 32;
+          SDL_Rect rect = {led_x, led_y, 32, 32};
+
+          if (SDL_PointInRect(&(SDL_Point){mouseX, mouseY}, &rect)) {
+            if (g_last_hit_tracker.count < LED_HITS_TO_REMEMBER) {
+              g_last_hit_tracker.x[g_last_hit_tracker.count] =
+                  g_led_config.point[i].x;
+              g_last_hit_tracker.y[g_last_hit_tracker.count] =
+                  g_led_config.point[i].y;
+              g_last_hit_tracker.index[g_last_hit_tracker.count] = i;
+              g_last_hit_tracker.tick[g_last_hit_tracker.count] = 0;
+
+              g_last_hit_tracker.count++;
+            }
+            break;
+          }
+        }
+      }
     }
 
     g_rgb_timer = SDL_GetTicks();
@@ -79,6 +124,7 @@ int main() {
     ANIMATION(&params);
     params.init = false;
     params.iter += 1;
+    process_hits();
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
